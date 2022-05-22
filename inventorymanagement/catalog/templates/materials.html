@@ -1,0 +1,110 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+
+
+<div class="flex flex-col">
+    <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+
+            <form method="POST">
+
+                {% csrf_token %}
+            <nav class="flex flex-initial flex-wrap md:ml-auto  flex-wrap  items-left text-base justify-center py-10">
+                <!--- more free and premium Tailwind CSS components at https://tailwinduikit.com/ --->
+
+                <!-- Code block starts -->
+                <div class="flex flex-col lg:mr-5">
+                    <input id="id" name="id" value="{{ id }}" autocomplete="off" class="text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 dark:focus:border-indigo-700 dark:border-gray-700 dark:bg-gray-800 bg-white font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border shadow" placeholder="ID" />
+                </div>
+                <div class="flex flex-col lg:mr-5">
+                    <input id="description" name="description" value="{{ description }}" autocomplete="off" class="text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 dark:focus:border-indigo-700 dark:border-gray-700 dark:bg-gray-800 bg-white font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border shadow" placeholder="Descripción" />
+                </div>
+                <div class="flex flex-col lg:mr-5 ">
+                    <input id="system" name="system" value="{{ system }}" autocomplete="off" class="text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 dark:focus:border-indigo-700 dark:border-gray-700 dark:bg-gray-800 bg-white font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border shadow" placeholder="Sistema" />
+                </div>
+                <div class="flex flex-col lg:mr-5 ">
+                    <input id="position" name="position" value="{{ position }}" autocomplete="off" class="text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 dark:focus:border-indigo-700 dark:border-gray-700 dark:bg-gray-800 bg-white font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border shadow" placeholder="Posición" />
+                </div>
+                <div class="flex flex-col hidden lg:visible">
+                    <button type="submit" class="text-indigo-600 hover:text-indigo-900">Buscar</button>
+                </div>
+            </nav>
+                <div class="flex flex-col lg:hidden">
+                    <button type="submit" class="text-indigo-600 hover:text-indigo-900">Buscar</button>
+                </div>
+            </form>
+
+
+
+        </div>
+            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto ">
+                <table class="min-w-full table-fixed divide-y divide-gray-200 overflow-x-auto  ">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sistema / Sector</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Posición</th>
+                        <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Editar</span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+
+                    <tr>
+                        {% for Material in object_list %}
+                        <td class="px-6 py-4 whitespace-wrap ">
+                            <div class="flex items-center">
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900"><a href="{{ Material.pk }}/">{{Material.description}}</div>
+                                    <div class="text-sm text-gray-500">{{Material.id}}</div>
+                                    <div class="text-sm text-gray-500">{{Material.trademark}}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900"><a href="{{ Material.pk }}/">{{Material.system}}</div>
+                                    <div class="text-sm text-gray-500">{{Material.owner}}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{Material.stock}}</div>
+                            <div class="text-sm text-gray-500">Cant.Seguridad {{Material.safety_stock}}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if Material.status == "d" %} bg-green-100 text-green-800 {% else %} bg-red-100 text-red-800 {% endif %} "> {% if Material.status == "d" %} Disponible {% else %} Reservado {% endif %}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{Material.position}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <form method="GET" action="../history">
+                                <button type="submit" class="text-indigo-600 hover:text-indigo-900" >Historia</button>
+                                <input id="material" name="material"   value="{{ Material.pk }}" placeholder="{{material.id}}" type="hidden">
+
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+</div>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends "base_generic.html" %}
+{% load qr_code %}
+{% block content %}
+
+<!-- This example requires Tailwind CSS v2.0+ -->
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 ">{{ material.description }}</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500 display: inline-block">{{ material.trademark }}</p>
+        <div style="float:right">
+            <button id="buttonmodal" class="focus:outline-none text-indigo-600 hover:text-indigo-900" type="button">Ingresar</button>
+            <button id="buttonmodal2" class="focus:outline-none text-indigo-600 hover:text-indigo-900 float:right" type="button">  /  Retirar</button>
+        </div>
+    </div>
+    <div class="border-t border-gray-200">
+        <dl>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">ID</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{material.id}}</dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Marca</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{material.trademark}}</dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Equipo/Sector</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{material.system}}</dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Estado</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{material.status}}</dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Stock</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{material.stock}}</dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Stock de seguridad</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{material.safety_stock}}</dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Última entrada</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{material.last_entry}}</dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Stock de seguridad</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{material.position}}</dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">QR</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{% qr_from_text text size="t" image_format="png" error_correction="L" %}</dd>
+            </div>
+        </dl>
+    </div>
+</div>
+
+
+
+
+
+
+<div id="modal"
+     class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-blue-500 bg-opacity-50 transform scale-0 transition-transform duration-300">
+    <!-- Modal content -->
+    <div class="bg-white w-1/4 h-1/2 p-5">
+        <!--Close modal button-->
+        <button id="closebutton" type="button" class="focus:outline-none  py-2">
+            <!-- Hero icon - close button -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </button>
+        <!-- Test content -->
+
+            <nav class="md:ml-auto flex flex-wrap items-left text-base justify-center">
+                <!--- more free and premium Tailwind CSS components at https://tailwinduikit.com/ --->
+                <form method="POST">
+                    {% csrf_token %}
+                <!-- Code block starts -->
+                    <label class="block">
+                        <span class="text-gray-700">Id</span>
+                        <input  readonly id="id" name="id" value="{{ material.id }}" autocomplete="off" class="text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 dark:focus:border-indigo-700 dark:border-gray-700 dark:bg-gray-800 bg-white font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border shadow" placeholder="{{material.id}}"  />
+                    </label>
+                    <label class="block py-5">
+                        <span class="text-gray-700">Operación</span>
+                        <input  readonly id="operation_entry" name="operation_entry" value="Entrada" autocomplete="off" class="text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 dark:focus:border-indigo-700 dark:border-gray-700 dark:bg-gray-800 bg-white font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border shadow" placeholder="Salida de material"  />
+                    </label>
+                    <label class="block">
+                        <span class="text-gray-700 ">Cantidad</span>
+                        <input  required type="number"  min="1" id="quantity" name="quantity" value="{{ quantity }}" autocomplete="off" class="text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 dark:focus:border-indigo-700 dark:border-gray-700 dark:bg-gray-800 bg-white font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border shadow" placeholder="Ingrese la cantidad"/>
+                    </label>
+
+                    <button type="submit" class="focus:outline-none text-indigo-600 hover:text-indigo-900 py-5">Dar entrada</button>
+
+                </form>
+
+            </nav>
+
+    </div>
+</div>
+
+
+
+<div id="modal2"
+     class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-blue-500 bg-opacity-50 transform scale-0 transition-transform duration-300">
+    <!-- Modal content -->
+    <div class="bg-white w-1/4 h-1/2 p-5">
+        <!--Close modal button-->
+        <button id="closebutton2" type="button" class="focus:outline-none  py-2">
+            <!-- Hero icon - close button -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </button>
+        <!-- Test content -->
+
+        <nav class="md:ml-auto flex flex-wrap items-left text-base justify-center">
+            <!--- more free and premium Tailwind CSS components at https://tailwinduikit.com/ --->
+            <form method="POST">
+                {% csrf_token %}
+                <!-- Code block starts -->
+                <label class="block">
+                    <span class="text-gray-700">Id</span>
+                    <input  readonly id="id_exit" name="id_exit" value="{{ material.id }}" autocomplete="off" class="text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 dark:focus:border-indigo-700 dark:border-gray-700 dark:bg-gray-800 bg-white font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border shadow" placeholder="{{material.id}}"  />
+                </label>
+                <label class="block py-5">
+                    <span class="text-gray-700">Operación</span>
+                    <input  readonly id="operation_exit" name="operation_exit" value="Salida" autocomplete="off" class="text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 dark:focus:border-indigo-700 dark:border-gray-700 dark:bg-gray-800 bg-white font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border shadow" placeholder="Salida de material"  />
+                </label>
+                <label class="block">
+                    <span class="text-gray-700 ">Cantidad</span>
+                    <input  required type="number"  min="1" id="quantity_exit" name="quantity_exit" value="{{ quantity_exit }}" autocomplete="off" class="text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 dark:focus:border-indigo-700 dark:border-gray-700 dark:bg-gray-800 bg-white font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border shadow" placeholder="Ingrese la cantidad"/>
+                </label>
+
+                <button type="submit" class="focus:outline-none text-indigo-600 hover:text-indigo-900 py-5">Dar salida</button>
+
+            </form>
+
+        </nav>
+
+    </div>
+</div>
+
+<script>
+        const button = document.getElementById('buttonmodal')
+        const closebutton = document.getElementById('closebutton')
+        const modal = document.getElementById('modal')
+
+        button.addEventListener('click',()=>modal.classList.add('scale-100'))
+        closebutton.addEventListener('click',()=>modal.classList.remove('scale-100'))
+    </script>
+
+
+
+<script>
+        const button2 = document.getElementById('buttonmodal2')
+        const closebutton2  = document.getElementById('closebutton2')
+        const modal2 = document.getElementById('modal2')
+
+        button2.addEventListener('click',()=>modal2.classList.add('scale-100'))
+        closebutton2.addEventListener('click',()=>modal2.classList.remove('scale-100'))
+    </script>
+
+{% endblock %}
